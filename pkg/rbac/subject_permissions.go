@@ -112,6 +112,20 @@ func ReplaceToCore(l []string) {
 	}
 }
 
+// NormalizeResourceNames unifies the resourceNames semantics with the rest of
+// the rule fields: an empty list (or empty-string entries) means the rule
+// applies to all resource names and is normalized to the "*" wildcard, while
+// explicit name restrictions are preserved.
+func NormalizeResourceNames(l []string) []string {
+	if len(l) == 0 {
+		return []string{"*"}
+	}
+
+	ReplaceToWildCard(l)
+
+	return l
+}
+
 type NamespacedPolicyRule struct {
 	Namespace string `json:"namespace,omitempty"`
 
@@ -155,9 +169,9 @@ func NewSubjectPermissionsList(policies []SubjectPermissions) []SubjectPolicyLis
 				//Normalize the strings
 				ReplaceToCore(rule.APIGroups)
 				ReplaceToWildCard(rule.Resources)
-				ReplaceToWildCard(rule.ResourceNames)
 				ReplaceToWildCard(rule.Verbs)
 				ReplaceToWildCard(rule.NonResourceURLs)
+				rule.ResourceNames = NormalizeResourceNames(rule.ResourceNames)
 
 				sort.Strings(rule.APIGroups)
 				sort.Strings(rule.Resources)

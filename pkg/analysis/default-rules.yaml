@@ -44,7 +44,8 @@ Rules:
               rule,
               (has(rule.verb)     && rule.verb in ['get', '*'])         && (has(rule.resource)
               && rule.resource in ['secrets', '*']) &&                         (has(rule.apiGroup)
-              && rule.apiGroup in ['core', '*'])
+              && rule.apiGroup in ['core', '*']) &&
+              (!has(rule.resourceNames) || '*' in rule.resourceNames)
             )
         )
     Exclusions:
@@ -76,7 +77,8 @@ Rules:
           (has(rule.verb)
            && rule.verb in ['create', 'update', 'patch', '*']) &&(has(rule.resource)
            && rule.resource in ['deployments', 'replicationcontrollers','daemonsets', 'statefulsets', 'replicasets', 'pods', 'jobs','cronjobs', '*'])
-           && (has(rule.apiGroup) && rule.apiGroup in ['core', 'batch','*'])
+           && (has(rule.apiGroup) && rule.apiGroup in ['core', 'batch','*']) &&
+           (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -102,7 +104,8 @@ Rules:
           (has(rule.verb)
            && rule.verb in ['impersonate', '*'])         &&(has(rule.resource)
            && rule.resource in ['users','groups','serviceaccounts', '*']) &&                       (has(rule.apiGroup)
-           && rule.apiGroup in ['core', '*'])
+           && rule.apiGroup in ['core', '*']) &&
+           (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -129,7 +132,8 @@ Rules:
               rule,
               (has(rule.verb)     && rule.verb in ['bind', 'create', 'update', 'patch', 'escalate', '*']) &&
               (has(rule.resource) && rule.resource in ['clusterroles', 'roles', '*']) &&
-              (has(rule.apiGroup) && rule.apiGroup in ['rbac.authorization.k8s.io','*'])
+              (has(rule.apiGroup) && rule.apiGroup in ['rbac.authorization.k8s.io','*']) &&
+              (!has(rule.resourceNames) || '*' in rule.resourceNames)
           )
       )
     Exclusions: []
@@ -154,14 +158,15 @@ Rules:
           rule,
           (has(rule.verb) && rule.verb in ['create', 'delete', 'update', 'patch', '*']) &&
           (
-            (
-              has(rule.resource) && rule.resource in ['persistentvolumeclaims', 'persistentvolumes', '*'] &&
-              has(rule.apiGroup) && rule.apiGroup in ['core','*']
-            ) ||
-            (
-              has(rule.apiGroup) && rule.apiGroup in ['storage.k8s.io','*']
-            )
-          )
+              (
+                has(rule.resource) && rule.resource in ['persistentvolumeclaims', 'persistentvolumes', '*'] &&
+                has(rule.apiGroup) && rule.apiGroup in ['core','*']
+              ) ||
+              (
+                has(rule.apiGroup) && rule.apiGroup in ['storage.k8s.io','*']
+              )
+            ) &&
+            (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -198,11 +203,12 @@ Rules:
               has(rule.resource) && rule.resource in ['services', 'endpoints', '*'] &&
               has(rule.apiGroup) && rule.apiGroup in ['core','*']
             ) ||
-            (
-               has(rule.resource) && rule.resource in ['endpointslices', '*'] &&
-               has(rule.apiGroup) && rule.apiGroup in ['discovery.k8s.io','*']
-            )
-          )
+              (
+                 has(rule.resource) && rule.resource in ['endpointslices', '*'] &&
+                 has(rule.apiGroup) && rule.apiGroup in ['discovery.k8s.io','*']
+              )
+            ) &&
+            (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -229,7 +235,8 @@ Rules:
           rule,
           (has(rule.verb) && rule.verb in ['create', 'delete', 'update', 'patch', '*']) &&
           (has(rule.resource) && rule.resource in ['gatewayclasses', 'gateways', 'httproutes', 'tcproutes', 'tlsroutes', 'udproutes', '*']) &&
-          (has(rule.apiGroup) && rule.apiGroup in ['gateway.networking.k8s.io', '*'])        )
+          (has(rule.apiGroup) && rule.apiGroup in ['gateway.networking.k8s.io', '*']) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)        )
       )
     Exclusions: []
 
@@ -256,7 +263,8 @@ Rules:
           (
               has(rule.resource) && rule.resource in ['mutatingwebhookconfigurations', 'validatingwebhookconfigurations', '*'] &&
               has(rule.apiGroup) && rule.apiGroup in ['admissionregistration.k8s.io','*']
-          )
+          ) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -282,7 +290,8 @@ Rules:
           (
               has(rule.resource) && rule.resource in ['customresourcedefinitions', '*'] &&
               has(rule.apiGroup) && rule.apiGroup in ['apiextensions.k8s.io','*']
-          )
+          ) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -317,7 +326,8 @@ Rules:
           (
               has(rule.resource) && rule.resource in ['configs', '*'] &&
               has(rule.apiGroup) && rule.apiGroup in ['config.gatekeeper.sh','*']
-          )
+          ) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: [] # gatekeeper-system/gatekeeper-admin excluded in global exceptions
@@ -341,7 +351,8 @@ Rules:
           rule,
           (has(rule.verb) && rule.verb in ['create', '*']) &&
           (has(rule.resource) && rule.resource in ['nodes/proxy', '*']) &&
-          (has(rule.apiGroup) && rule.apiGroup in ['', '*'])        )
+          (has(rule.apiGroup) && rule.apiGroup in ['core', '*']) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)        )
       )
     Exclusions: [] #
 
@@ -366,7 +377,8 @@ Rules:
           rule,
           (has(rule.verb) && rule.verb in ['patch', 'update', '*']) &&
           (has(rule.resource) && rule.resource in ['pods/ephemeralcontainers', '*']) &&
-          (has(rule.apiGroup) && rule.apiGroup in ['', '*'])        )
+          (has(rule.apiGroup) && rule.apiGroup in ['core', '*']) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)        )
       )
     Exclusions: []
 
@@ -391,7 +403,8 @@ Rules:
           rule,
           (has(rule.verb) && rule.verb in ['create', '*']) &&
           (has(rule.resource) && rule.resource in ['pods/exec', '*']) &&
-          (has(rule.apiGroup) && rule.apiGroup in ['', '*'])        )
+          (has(rule.apiGroup) && rule.apiGroup in ['core', '*']) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)        )
       )
     Exclusions: []
 
@@ -416,7 +429,8 @@ Rules:
           (
               has(rule.resource) && rule.resource in ['clusterpolicies', 'policies', '*'] &&
               has(rule.apiGroup) && rule.apiGroup in ['kyverno.io','*']
-          ) 
+          ) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []
@@ -442,7 +456,8 @@ Rules:
           (
               has(rule.resource) && rule.resource in ['validatingadmissionpolicies', 'validatingadmissionpolicybindings', '*'] &&
               has(rule.apiGroup) && rule.apiGroup in ['admissionregistration.k8s.io','*']
-          )
+          ) &&
+          (!has(rule.resourceNames) || '*' in rule.resourceNames)
         )
       )
     Exclusions: []

@@ -93,7 +93,7 @@ rbac-tool who-can get secret/some-secret
 						 { 	.Verb     in [Verb, "*"] and 
 							.Resource in [Kind, "*"] and 
 							.APIGroup in [APIGroup, "*"] and 
-							(Name == "*" or len(.ResourceNames) == 0 or Name in .ResourceNames)
+							(Name == "*" or len(.ResourceNames) == 0 or "*" in .ResourceNames or Name in .ResourceNames)
 						 }
 					)}
 				)`
